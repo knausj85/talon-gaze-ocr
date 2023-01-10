@@ -79,11 +79,10 @@ ctx.lists["self.ocr_actions"] = {
     "take": "select",
     "copy": "copy",
     "carve": "cut",
-    "paste to": "paste",
+    "pace": "paste",
+    
+    
     "clear": "delete",
-    "change": "delete",
-    "delete": "delete",
-    "chuck": "delete",
     "cap": "capitalize",
     "lower": "lowercase",
     # Note: the following are not defined by default in knausj.
@@ -602,6 +601,18 @@ class GazeOcrActions:
             actions.mouse_click(0)
 
         begin_generator(run())
+
+    def triple_click_text(text: TimestampedText):
+        """triple-lick on the provided on-screen text."""
+
+        def run():
+            yield from move_cursor_to_word_generator(text)
+            actions.mouse_click(0)
+            actions.mouse_click(0)
+            actions.mouse_click(0)
+
+        begin_generator(run())
+
 
     def right_click_text(text: TimestampedText):
         """Right-click on the provided on-screen text."""
