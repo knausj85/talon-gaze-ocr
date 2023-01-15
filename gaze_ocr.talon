@@ -55,6 +55,9 @@ duke <user.timestamped_prose>$:
     user.double_click_text(timestamped_prose)
 rip <user.timestamped_prose>$:
     user.triple_click_text(timestamped_prose)
+steel <user.timestamped_prose>$:
+    user.triple_click_text(timestamped_prose)
+    edit.copy()
 righty <user.timestamped_prose>$:
     user.right_click_text(timestamped_prose)
 middle (touch) <user.timestamped_prose>$:
