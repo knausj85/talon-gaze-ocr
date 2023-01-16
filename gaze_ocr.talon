@@ -49,7 +49,7 @@ mode: dictation
 ocr show [text]: user.show_ocr_overlay("text", 1)
 ocr show boxes: user.show_ocr_overlay("boxes", 1)
 (hover (seen | scene) | cursor move) <user.timestamped_prose>$: user.move_cursor_to_word(timestamped_prose)
-[left] (touch | tap) <user.timestamped_prose>$:
+[left] (touch | pat) <user.timestamped_prose>$:
     user.click_text(timestamped_prose)
 duke <user.timestamped_prose>$:
     user.double_click_text(timestamped_prose)
