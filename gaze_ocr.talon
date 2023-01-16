@@ -1,5 +1,4 @@
-mode: command
-mode: dictation
+not tag: user.homerow_search
 -
 (eye | i) (hover | [cursor] move): user.move_cursor_to_gaze_point()
 (eye | i) [left] (touch):
