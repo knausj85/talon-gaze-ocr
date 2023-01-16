@@ -45,6 +45,15 @@ def timestamped_phrase(m) -> TimestampedText:
 
 # "edit" is frequently misrecognized as "at it", and is common in UIs.
 @mod.capture(
+    rule="{user.letter}+ | {user.punctuation}+"
+)
+def timestamped_spell_default(m) -> TimestampedText:
+    """Dictated spell appearing onscreen (default capture)."""
+    return TimestampedText(
+        text="".join([str(item) for item in m]), start=m[0].start, end=m[-1].end
+    )
+
+@mod.capture(
     rule="<phrase> | {user.vocabulary} | {user.punctuation} | {user.prose_snippets} | edit"
 )
 def timestamped_phrase_default(m) -> TimestampedText:
@@ -61,7 +70,6 @@ def timestamped_phrase_default(m) -> TimestampedText:
         start = item.start
         end = item.end
     return TimestampedText(text=text, start=start, end=end)
-
 
 @mod.capture(rule="[before | after] <self.timestamped_prose>")
 def prose_position(m) -> TextPosition:
