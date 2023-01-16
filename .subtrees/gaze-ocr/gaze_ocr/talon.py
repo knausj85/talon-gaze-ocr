@@ -111,6 +111,7 @@ class TalonEyeTracker:
     STALE_GAZE_THRESHOLD_SECONDS = 0.1
 
     def __init__(self):
+        self.is_connected = False
         # Keep approximately 10 seconds of frames on Tobii 5
         self._queue = deque(maxlen=1000)
         # TODO: Remove once Talon is upgraded to Python 3.10 and bisect supports key arg.
