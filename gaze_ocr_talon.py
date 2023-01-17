@@ -76,12 +76,10 @@ mod.mode("gaze_ocr_disambiguation")
 mod.list("ocr_actions", desc="Actions to perform on selected text.")
 mod.list("ocr_modifiers", desc="Modifiers to perform on selected text.")
 ctx.lists["self.ocr_actions"] = {
-    "take": "select",
+    "grab": "select",
     "copy": "copy",
     "carve": "cut",
     "pace": "paste",
-    
-    
     "clear": "delete",
     "cap": "capitalize",
     "lower": "lowercase",
@@ -227,7 +225,6 @@ def reload_backend(name, flags):
 def on_ready():
     reload_backend(None, None)
     fs.watch(str(homophones_file), reload_backend)
-
 
 
 app.register("ready", on_ready)
@@ -443,7 +440,7 @@ class GazeOcrActions:
     def disconnect_ocr_eye_tracker():
         """Disconnects eye tracker from OCR."""
         tracker.disconnect()
-        
+
     def move_cursor_to_word(text: TimestampedText):
         """Moves cursor to onscreen word."""
         begin_generator(move_cursor_to_word_generator(text))
@@ -621,7 +618,6 @@ class GazeOcrActions:
             actions.mouse_click(0)
 
         begin_generator(run())
-
 
     def right_click_text(text: TimestampedText):
         """Right-click on the provided on-screen text."""

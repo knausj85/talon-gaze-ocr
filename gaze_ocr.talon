@@ -1,4 +1,5 @@
 not tag: user.homerow_search
+and not tag: user.fluent_search_screen_search
 -
 (eye | i) (hover | [cursor] move): user.move_cursor_to_gaze_point()
 (eye | i) [left] (touch):
@@ -67,7 +68,7 @@ middle (touch) <user.timestamped_prose>$:
     user.modifier_click_text(modifiers, timestamped_prose)
 (go before | pre (seen | scene)) <user.timestamped_prose>$: user.move_text_cursor_to_word(timestamped_prose, "before")
 (go after | post (seen | scene)) <user.timestamped_prose>$: user.move_text_cursor_to_word(timestamped_prose, "after")
-take <user.prose_range>$:
+grab <user.prose_range>$:
     user.perform_ocr_action("select", "", prose_range)
 {user.ocr_actions} [{user.ocr_modifiers}] (seen | scene) <user.prose_range>$:
     user.perform_ocr_action(ocr_actions, ocr_modifiers or "", prose_range)
