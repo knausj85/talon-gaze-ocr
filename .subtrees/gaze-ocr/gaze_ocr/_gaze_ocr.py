@@ -94,8 +94,8 @@ class Controller:
         self._future.set_result(
             self.ocr_reader.read_nearby(
                 gaze_point,
-                search_radius=max_radius + 100,
-                crop_radius=max_radius + 200,
+                search_radius=max_radius + 100 * 2,
+                crop_radius=max_radius + 200 * 2,
             )
         )
 
