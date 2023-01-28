@@ -60,7 +60,7 @@ rip <user.timestamped_prose>$:
 steel <user.timestamped_prose>$:
     user.triple_click_text(timestamped_prose)
     edit.copy()
-righty <user.timestamped_prose>$:
+rate <user.timestamped_prose>$:
     user.right_click_text(timestamped_prose)
 middle (touch) <user.timestamped_prose>$:
     user.middle_click_text(timestamped_prose)
