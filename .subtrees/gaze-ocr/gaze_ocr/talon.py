@@ -78,7 +78,7 @@ class Keyboard:
 class AppActions:
     def peek_left(self) -> Optional[str]:
         try:
-            return actions.user.dictation_peek(True, False)[0]
+            return actions.user.dictation_peek(True, False)[0][0]
         except KeyError:
             try:
                 return actions.user.dictation_peek_left()
@@ -89,7 +89,7 @@ class AppActions:
 
     def peek_right(self) -> Optional[str]:
         try:
-            return actions.user.dictation_peek(False, True)[1]
+            return actions.user.dictation_peek(False, True)[1][1]
         except KeyError:
             try:
                 return actions.user.dictation_peek_right()
@@ -111,12 +111,12 @@ class TalonEyeTracker:
     STALE_GAZE_THRESHOLD_SECONDS = 0.1
 
     def __init__(self):
-        self.is_connected = False
         # Keep approximately 10 seconds of frames on Tobii 5
         self._queue = deque(maxlen=1000)
         # TODO: Remove once Talon is upgraded to Python 3.10 and bisect supports key arg.
         self._ts_queue = deque(maxlen=1000)
-        # self.connect()
+        self.is_connected = False
+        self.connect()
 
     def _on_gaze(self, frame: tobii.GazeFrame):
         if not frame or not frame.gaze:
@@ -125,16 +125,17 @@ class TalonEyeTracker:
         self._ts_queue.append(frame.ts)
 
     def connect(self):
+        if self.is_connected:
+            return
         # !!! Using unstable private API that may break at any time !!!
-        
-        if not self.is_connected:
-            tracking_system.register("gaze", self._on_gaze)
+        tracking_system.register("gaze", self._on_gaze)
         self.is_connected = True
 
     def disconnect(self):
+        if not self.is_connected:
+            return
         # !!! Using unstable private API that may break at any time !!!
-        if self.is_connected:
-            tracking_system.unregister("gaze", self._on_gaze)
+        tracking_system.unregister("gaze", self._on_gaze)
         self.is_connected = False
 
     def has_gaze_point(self):
