@@ -206,11 +206,11 @@ def reload_backend(name, flags):
     )
     if setting_ocr_use_talon_backend.get():
         ocr_reader = screen_ocr.Reader.create_reader(
-            backend="talon", radius=200, homophones=homophones
+            backend="talon", radius=400, homophones=homophones
         )
     else:
         ocr_reader = screen_ocr.Reader.create_fast_reader(
-            radius=200, homophones=homophones
+            radius=400, homophones=homophones
         )
     gaze_ocr_controller = gaze_ocr.Controller(
         ocr_reader,
