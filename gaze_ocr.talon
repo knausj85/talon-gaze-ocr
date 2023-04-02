@@ -1,6 +1,9 @@
 not tag: user.homerow_search
 and not tag: user.fluent_search_screen_search
 -
+settings():
+	user.ocr_connect_tracker = 0
+    
 (eye | i) (hover | [cursor] move): user.move_cursor_to_gaze_point()
 (eye | i) [left] (touch):
     user.move_cursor_to_gaze_point()
