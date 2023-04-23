@@ -1,3 +1,5 @@
+mode: dictation
+mode: command
 not tag: user.homerow_search
 and not tag: user.fluent_search_screen_search
 -
@@ -54,16 +56,14 @@ ocr show boxes: user.show_ocr_overlay("boxes", 1)
 (hover (seen | scene) | cursor move) <user.timestamped_prose>$: user.move_cursor_to_word(timestamped_prose)
 [left] (touch | prod) <user.timestamped_prose>$:
     user.click_text(timestamped_prose)
-^stupid test <user.timestamped_spell_default>$:
-    user.click_text(timestamped_spell_default)
-duke <user.timestamped_prose>$:
+^duke <user.timestamped_prose>$:
     user.double_click_text(timestamped_prose)
-rip <user.timestamped_prose>$:
+^rip <user.timestamped_prose>$:
     user.triple_click_text(timestamped_prose)
-steel <user.timestamped_prose>$:
+^steel <user.timestamped_prose>$:
     user.triple_click_text(timestamped_prose)
     edit.copy()
-rate <user.timestamped_prose>$:
+^rate <user.timestamped_prose>$:
     user.right_click_text(timestamped_prose)
 middle (touch) <user.timestamped_prose>$:
     user.middle_click_text(timestamped_prose)
@@ -77,9 +77,9 @@ grab <user.prose_range>$:
     user.perform_ocr_action(ocr_actions, ocr_modifiers or "", prose_range)
 replace [{user.ocr_modifiers}] [seen | scene] <user.prose_range> with <user.prose>$:
     user.replace_text(ocr_modifiers or "", prose_range, prose)
-[go] before <user.timestamped_prose> say <user.prose>$:
+go before <user.timestamped_prose> say <user.prose>$:
     user.insert_adjacent_to_text(timestamped_prose, "before", prose)
-[go] after <user.timestamped_prose> say <user.prose>$:
+go after <user.timestamped_prose> say <user.prose>$:
     user.insert_adjacent_to_text(timestamped_prose, "after", prose)
 phones (seen | scene) <user.timestamped_prose>$:
     user.change_text_homophone(timestamped_prose)
