@@ -58,11 +58,7 @@ ocr show boxes: user.show_ocr_overlay("boxes", 1)
     user.click_text(timestamped_prose)
 ^duke <user.timestamped_prose>$:
     user.double_click_text(timestamped_prose)
-<<<<<<< Updated upstream
-^rip <user.timestamped_prose>$:
-=======
 ^ripple <user.timestamped_prose>$:
->>>>>>> Stashed changes
     user.triple_click_text(timestamped_prose)
 ^steel <user.timestamped_prose>$:
     user.triple_click_text(timestamped_prose)
