@@ -63,7 +63,7 @@ ocr show boxes: user.show_ocr_overlay("boxes", 1)
 ^steel <user.timestamped_prose>$:
     user.triple_click_text(timestamped_prose)
     edit.copy()
-^rate <user.timestamped_prose>$:
+^connie <user.timestamped_prose>$:
     user.right_click_text(timestamped_prose)
 middle (touch) <user.timestamped_prose>$:
     user.middle_click_text(timestamped_prose)
