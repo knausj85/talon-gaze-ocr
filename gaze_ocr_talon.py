@@ -638,6 +638,17 @@ class GazeOcrActions:
             actions.mouse_click(1)
 
         begin_generator(run())
+    
+    def modifier_right_click_text(modifier: str, text: TimestampedText):
+        """Control-click on the provided on-screen text."""
+
+        def run():
+            yield from move_cursor_to_word_generator(text)
+            actions.key(f"{modifier}:down")
+            actions.mouse_click(1)
+            actions.key(f"{modifier}:up")
+
+        begin_generator(run())
 
     def middle_click_text(text: TimestampedText):
         """Middle-click on the provided on-screen text."""
@@ -656,6 +667,16 @@ class GazeOcrActions:
             actions.key(f"{modifier}:down")
             actions.mouse_click(0)
             actions.key(f"{modifier}:up")
+
+        begin_generator(run())
+
+    def drag_text(text: TimestampedText):
+        """Control-click on the provided on-screen text."""
+
+        def run():
+            actions.user.mouse_drag(0)
+            yield from move_cursor_to_word_generator(text)
+            actions.user.mouse_drag_end()
 
         begin_generator(run())
 

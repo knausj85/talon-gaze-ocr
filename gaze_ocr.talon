@@ -7,20 +7,20 @@ settings():
 	user.ocr_connect_tracker = 0
     
 (eye | i) (hover | [cursor] move): user.move_cursor_to_gaze_point()
-(eye | i) [left] (touch):
+(eye | i) [left] (prod):
     user.move_cursor_to_gaze_point()
     mouse_click(0)
-(eye | i) [left] double (touch):
+(eye | i) [left] double (prod):
     user.move_cursor_to_gaze_point()
     mouse_click(0)
     mouse_click(0)
-(eye | i) right (touch):
+(eye | i) right (prod):
     user.move_cursor_to_gaze_point()
     mouse_click(1)
-(eye | i) middle (touch):
+(eye | i) middle (prod):
     user.move_cursor_to_gaze_point()
     mouse_click(2)
-(eye | i) <user.modifiers> (touch):
+(eye | i) <user.modifiers> (prod):
     user.move_cursor_to_gaze_point()
     key("{modifiers}:down")
     mouse_click(0)
@@ -54,7 +54,7 @@ settings():
 ocr show [text]: user.show_ocr_overlay("text", 1)
 ocr show boxes: user.show_ocr_overlay("boxes", 1)
 (hover (seen | scene) | cursor move) <user.timestamped_prose>$: user.move_cursor_to_word(timestamped_prose)
-[left] (touch | prod) <user.timestamped_prose>$:
+[left] (prod | prod) <user.timestamped_prose>$:
     user.click_text(timestamped_prose)
 ^duke <user.timestamped_prose>$:
     user.double_click_text(timestamped_prose)
@@ -65,10 +65,16 @@ ocr show boxes: user.show_ocr_overlay("boxes", 1)
     edit.copy()
 ^connie <user.timestamped_prose>$:
     user.right_click_text(timestamped_prose)
-middle (touch) <user.timestamped_prose>$:
+^<user.modifiers> connie <user.timestamped_prose>$:
+    user.modifier_right_click_text(modifiers, timestamped_prose)
+    
+dragger <user.timestamped_prose>$: user.drag_text(timestamped_prose)
+
+   
+middle (prod) <user.timestamped_prose>$:
     user.middle_click_text(timestamped_prose)
-<user.modifiers> (touch) <user.timestamped_prose>$:
-    user.modifier_click_text(modifiers, timestamped_prose)
+<user.modifiers> (prod|grab) <user.timestamped_prose>$:
+     user.modifier_click_text(modifiers, timestamped_prose)
 (go before | pre (seen | scene)) <user.timestamped_prose>$: user.move_text_cursor_to_word(timestamped_prose, "before")
 (go after | post (seen | scene)) <user.timestamped_prose>$: user.move_text_cursor_to_word(timestamped_prose, "after")
 grab <user.prose_range>$:
