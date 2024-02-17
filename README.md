@@ -8,9 +8,12 @@ for an overview.
 
 ## Installation
 
-`git clone` this repo into your user directory. Requires
-[knausj_talon](https://github.com/knausj85/knausj_talon) to be installed as a
-sibling in the same directory.
+Prerequisite: Requires [community](https://github.com/talonhub/community) to be
+installed as a sibling in the same directory.
+
+`git clone` this repo into your Talon user scripts folder. If you are on Talon
+Beta, switch to the "beta" branch (add flag `-b beta`) to take advantage of
+beta-only features. 
 
 Required permissions:
 
@@ -22,12 +25,14 @@ Required permissions:
 
 Required Python packages:
 
-- On Mac, all Python package dependencies are present in the `.subtrees` directory
-  so that no pip installations are needed.
-- On Windows, the Talon OCR API is not yet available, so you will need to run
-  `%APPDATA%\talon\.venv\Scripts\pip.bat install winsdk pillow`.
-- On all platforms, if packages are available through standard pip installation,
-  these will be preferred (e.g. so that faster binary installations can be used.)
+- All Python package dependencies are present in the `.subtrees` directory so
+  that no pip installations are needed. If packages are have been installed
+  manually through pip, these will be preferred (e.g. so that faster binary
+  packages can be used.)
+
+Note: This installation process is for Windows and Mac. Linux is not officially
+supported because Talon does not provide an OCR API. You may be able to get this
+working using Tesseract, but this configuration is not tested by the author.
 
 ## Features:
 
@@ -37,17 +42,19 @@ Required Python packages:
 - Applies fuzzy matching to one or more spoken words.
 - Works with or without an eye tracker (just expect slower processing and more
   disambiguation).
-- Matches homophones of recognized words (based on CSV in knausj). Also matches
-  numbers and punctuation in either their spoken form (e.g. "two" and "period")
-  or their symbolic form (e.g. "2" and ".").
+- Matches homophones of recognized words (based on CSV in
+- [community](https://github.com/talonhub/community)). Also
+  matches numbers and punctuation in either their spoken form (e.g. "two" and
+  "period") or their symbolic form (e.g. "2" and ".").
 - Briefly displays debugging overlay if no matches are present.
 
-## Known issues:
+## Known limitations:
 
 - Only operates on the main screen, as defined by Talon.
 - Updates (via git pull) and some settings changes require Talon restart.
 - Numbers must be referred to by their individual digits.
-- Modifications to punctuation and digit names in knausj not leveraged.
+- Modifications to punctuation and digit names in
+  [community](https://github.com/talonhub/community) not leveraged.
 - Depends on OS-provided text recognition (OCR), which is not perfectly accurate.
 - Cursor positioning often imprecise around text with underline, strikethrough,
   or squiggly.
@@ -55,8 +62,10 @@ Required Python packages:
 - Command subtitles may cause disambiguation when selecting a range of text.
 - Dragon recognition timestamps are slightly off, leading to lower accuracy
   especially during text selection. Works best with Conformer.
+- Text selection only works in apps that support shift-click to select (vs.
+  dragging), which excludes some PDF viewers. 
 - See the [issue tracker](https://github.com/wolfmanstout/talon-gaze-ocr/issues)
-  for other bugs that have been discovered.
+  for bugs that have been discovered.
 
 ## Dependencies
 
@@ -72,10 +81,10 @@ To contribute, changes can be pushed and pulled to all repositories using
 `gaze-ocr`, `rapidfuzz`, and `jarowinkler` are all configured as git remotes,
 and `git subtree` is available.
 
-## Running without knausj_talon
+## Running without `community`
 
 As noted in the installation instructions,
-[knausj_talon](https://github.com/knausj85/knausj_talon) is highly recommended,
+[community](https://github.com/talonhub/community) is highly recommended,
 but most functionality will still be available in degraded form without it (and
 you will see some warning logs). Missing functionality:
 
