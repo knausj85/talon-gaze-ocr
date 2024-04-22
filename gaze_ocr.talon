@@ -2,6 +2,7 @@ mode: dictation
 mode: command
 not tag: user.homerow_search
 and not tag: user.fluent_search_screen_search
+and not tag: user.clickable_overlay_active
 -
 settings():
 	user.ocr_connect_tracker = 0
