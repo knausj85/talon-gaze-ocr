@@ -8,20 +8,20 @@ settings():
 	user.ocr_connect_tracker = 0
     
 (eye | i) (hover | [cursor] move): user.move_cursor_to_gaze_point()
-(eye | i) [left] (prod):
+(eye | i) [left] (prod|proud):
     user.move_cursor_to_gaze_point()
     mouse_click(0)
-(eye | i) [left] double (prod):
+(eye | i) [left] double (prod|proud):
     user.move_cursor_to_gaze_point()
     mouse_click(0)
     mouse_click(0)
-(eye | i) right (prod):
+(eye | i) right (prod|proud):
     user.move_cursor_to_gaze_point()
     mouse_click(1)
-(eye | i) middle (prod):
+(eye | i) middle (prod|proud):
     user.move_cursor_to_gaze_point()
     mouse_click(2)
-(eye | i) <user.modifiers> (prod):
+(eye | i) <user.modifiers> (prod|proud):
     user.move_cursor_to_gaze_point()
     key("{modifiers}:down")
     mouse_click(0)
@@ -60,7 +60,7 @@ ocr show boxes: user.show_ocr_overlay("boxes")
 # Commands that operate on text nearby where you're looking.
 # Example: "hover seen apple" to hover the cursor over the word "apple".
 (hover (seen | scene) | cursor move) <user.timestamped_prose>$: user.move_cursor_to_word(timestamped_prose)
-[left] (prod | prod) <user.timestamped_prose>$:
+[left] (prod|proud) <user.timestamped_prose>$:
     user.click_text(timestamped_prose)
 ^duke <user.timestamped_prose>$:
     user.double_click_text(timestamped_prose)
@@ -77,9 +77,9 @@ ocr show boxes: user.show_ocr_overlay("boxes")
 dragger <user.timestamped_prose>$: user.drag_text(timestamped_prose)
 
    
-middle (prod) <user.timestamped_prose>$:
+middle (prod|proud) <user.timestamped_prose>$:
     user.middle_click_text(timestamped_prose)
-<user.modifiers> (prod|grab) <user.timestamped_prose>$:
+<user.modifiers> (prod|proud|grab) <user.timestamped_prose>$:
      user.modifier_click_text(modifiers, timestamped_prose)
 (go before | pre (seen | scene)) <user.timestamped_prose>$: user.move_text_cursor_to_word(timestamped_prose, "before")
 (go after | post (seen | scene)) <user.timestamped_prose>$: user.move_text_cursor_to_word(timestamped_prose, "after")
