@@ -60,7 +60,7 @@ ocr show boxes: user.show_ocr_overlay("boxes")
 # Commands that operate on text nearby where you're looking.
 # Example: "hover seen apple" to hover the cursor over the word "apple".
 (hover (seen | scene) | cursor move) <user.timestamped_prose>$: user.move_cursor_to_word(timestamped_prose)
-[left] (prod|proud) <user.timestamped_prose>$:
+[left] (prod|proud|broad) <user.timestamped_prose>$:
     user.click_text(timestamped_prose)
 ^duke <user.timestamped_prose>$:
     user.double_click_text(timestamped_prose)
