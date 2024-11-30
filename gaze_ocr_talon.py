@@ -112,7 +112,7 @@ ctx.lists["self.ocr_actions"] = {
     "change": "delete",
     "delete": "delete_with_whitespace",
     "chuck": "delete_with_whitespace",
-    "cap": "capitalize",
+    "recap": "capitalize",
     "no cap": "uncapitalize",
     "no caps": "uncapitalize",
     "lower": "lowercase",
