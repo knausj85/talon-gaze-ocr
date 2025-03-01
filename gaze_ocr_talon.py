@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Literal, Optional, Union
 
 import numpy as np
-from talon import Context, Module, actions, app, cron, fs, screen, settings
+from talon import Context, Module, actions, app, cron, fs, screen, settings, ui
 from talon.canvas import Canvas
 from talon.skia.typeface import Fontstyle, Typeface
 from talon.types import rect
@@ -436,7 +436,7 @@ def show_disambiguation():
     ctx.tags = ["user.gaze_ocr_disambiguation"]
     if disambiguation_canvas:
         disambiguation_canvas.close()
-    disambiguation_canvas = Canvas.from_rect(screen_ocr.to_rect(contents.bounding_box))
+    disambiguation_canvas = Canvas.from_screen(ui.main_screen())
     disambiguation_canvas.register("draw", on_draw)
     disambiguation_canvas.freeze()
 
