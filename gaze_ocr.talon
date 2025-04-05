@@ -68,6 +68,7 @@ ocr show boxes: user.show_ocr_overlay("boxes")
     user.triple_click_text(timestamped_prose)
 ^steel <user.timestamped_prose>$:
     user.triple_click_text(timestamped_prose)
+    sleep(100ms)
     edit.copy()
 ^connie <user.timestamped_prose>$:
     user.right_click_text(timestamped_prose)

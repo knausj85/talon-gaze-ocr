@@ -794,6 +794,16 @@ class GazeOcrActions:
 
         actions.user.move_cursor_to_text_and_do(text, double_click)
 
+    def triple_click_text(text: TimestampedText):
+        """Double-lick on the provided on-screen text."""
+
+        def triple_click() -> None:
+            actions.mouse_click(0)
+            actions.mouse_click(0)
+            actions.mouse_click(0)
+
+        actions.user.move_cursor_to_text_and_do(text, triple_click)
+
     def right_click_text(text: TimestampedText):
         """Right-click on the provided on-screen text."""
         actions.user.move_cursor_to_text_and_do(text, lambda: actions.mouse_click(1))
