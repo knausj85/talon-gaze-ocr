@@ -5,10 +5,10 @@ import sys
 from collections.abc import Callable, Iterable, Sequence
 from math import floor
 from pathlib import Path
-from typing import Literal, Optional, Union
+from typing import Literal, Optional
 
 import numpy as np
-from talon import Context, Module, actions, app, cron, fs, screen, settings, ui
+from talon import Context, Module, actions, app, cron, fs, screen, settings
 from talon.canvas import Canvas
 from talon.skia.typeface import Fontstyle, Typeface
 from talon.types import rect
@@ -120,34 +120,11 @@ mod.tag(
     desc="Tag for disambiguating between different onscreen matches.",
 )
 mod.list("ocr_actions", desc="Actions to perform on selected text.")
+mod.list(
+    "ocr_common_actions", desc="Common actions that can be used without 'seen'/'scene'."
+)
 mod.list("ocr_modifiers", desc="Modifiers to perform on selected text.")
 mod.list("onscreen_ocr_text", desc="Selection list for onscreen text.")
-ctx.lists["self.ocr_actions"] = {
-    "take": "select",
-    "copy": "copy",
-    "carve": "cut",
-    "paste to": "paste",
-    "paste link to": "paste_link",
-    "clear": "delete",
-    "change": "delete",
-    "delete": "delete_with_whitespace",
-    "chuck": "delete_with_whitespace",
-    "cap": "capitalize",
-    "no cap": "uncapitalize",
-    "no caps": "uncapitalize",
-    "lower": "lowercase",
-    "upper": "uppercase",
-    # Note: the following are not defined by default in knausj.
-    "bold": "bold",
-    "italic": "italic",
-    "strikethrough": "strikethrough",
-    "number": "number_list",
-    "bullet": "bullet_list",
-    "link": "link",
-}
-ctx.lists["self.ocr_modifiers"] = {
-    "all": "selectAll",
-}
 
 
 def paste_link() -> None:
@@ -194,7 +171,7 @@ _OCR_MODIFIERS: dict[str, Callable[[], None]] = {
 
 
 @ctx.dynamic_list("user.onscreen_ocr_text")
-def onscreen_ocr_text(phrase) -> Union[str, list[str], dict[str, str]]:
+def onscreen_ocr_text(phrase) -> str | list[str] | dict[str, str]:
     global gaze_ocr_controller, punctuation_table
     reset_disambiguation()
     gaze_ocr_controller.read_nearby((phrase[0].start, phrase[-1].end))
@@ -219,7 +196,18 @@ def add_homophones(
             homophones[word.lower()] = merged_words
 
 
-digits = "zero one two three four five six seven eight nine".split()
+digits = [
+    "zero",
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+]
 default_digits_map = {n: i for i, n in enumerate(digits)}
 
 # Inline punctuation words in case people are using vanilla knausj, where these are not
@@ -427,7 +415,7 @@ def show_disambiguation():
         setting_ocr_disambiguation_display_seconds = settings.get(
             "user.ocr_disambiguation_display_seconds"
         )
-        if setting_ocr_disambiguation_display_seconds:
+        if setting_ocr_disambiguation_display_seconds and disambiguation_canvas:
             cron.after(
                 f"{setting_ocr_disambiguation_display_seconds}s",
                 disambiguation_canvas.close,
@@ -436,7 +424,20 @@ def show_disambiguation():
     ctx.tags = ["user.gaze_ocr_disambiguation"]
     if disambiguation_canvas:
         disambiguation_canvas.close()
-    disambiguation_canvas = Canvas.from_screen(ui.main_screen())
+    rect = screen_ocr.to_rect(contents.bounding_box)
+    screen_rect = screen.main().rect
+    # If rect is approximately equal to screen.main().rect, use Canvas.from_screen to
+    # avoid Windows bug where the screen is blacked out.
+    # https://github.com/wolfmanstout/talon-gaze-ocr/issues/47
+    if (
+        abs(rect.x - screen_rect.x) < 1
+        and abs(rect.y - screen_rect.y) < 1
+        and abs(rect.width - screen_rect.width) < 1
+        and abs(rect.height - screen_rect.height) < 1
+    ):
+        disambiguation_canvas = Canvas.from_screen(screen.main())
+    else:
+        disambiguation_canvas = Canvas.from_rect(rect)
     disambiguation_canvas.register("draw", on_draw)
     disambiguation_canvas.freeze()
 
@@ -453,10 +454,10 @@ def begin_generator(generator):
         pass
 
 
-def move_cursor_to_word_generator(text: TimestampedText):
+def move_cursor_to_word_generator(text: TimestampedText, disambiguate: bool = True):
     result = yield from gaze_ocr_controller.move_cursor_to_words_generator(
         text.text,
-        disambiguate=True,
+        disambiguate=disambiguate,
         time_range=(text.start, text.end),
         click_offset_right=settings.get("user.ocr_click_offset_right"),
     )
@@ -688,9 +689,11 @@ class GazeOcrActions:
                         )
                     else:
                         raise RuntimeError(f"Type not recognized: {type}")
-            cron.after(
-                f"{settings.get('user.ocr_debug_display_seconds')}s", debug_canvas.close
-            )
+            if debug_canvas:
+                cron.after(
+                    f"{settings.get('user.ocr_debug_display_seconds')}s",
+                    debug_canvas.close,
+                )
 
         # Increased size slightly for canvas to ensure everything will be inside canvas
         canvas_rect = contents_rect.copy()
@@ -771,12 +774,12 @@ class GazeOcrActions:
         begin_generator(run())
 
     def move_cursor_to_text_and_do(
-        text: TimestampedText, action: Callable[[], None]
+        text: TimestampedText, action: Callable[[], None], disambiguate: bool = True
     ) -> None:
         """Moves cursor to onscreen word and performs an action."""
 
         def run():
-            yield from move_cursor_to_word_generator(text)
+            yield from move_cursor_to_word_generator(text, disambiguate)
             action()
 
         begin_generator(run())
@@ -784,6 +787,13 @@ class GazeOcrActions:
     def click_text(text: TimestampedText):
         """Click on the provided on-screen text."""
         actions.user.move_cursor_to_text_and_do(text, lambda: actions.mouse_click(0))
+
+    def click_text_without_disambiguation(text: TimestampedText):
+        """Click on the provided on-screen text, choosing the best match if multiple are
+        found."""
+        actions.user.move_cursor_to_text_and_do(
+            text, lambda: actions.mouse_click(0), disambiguate=False
+        )
 
     def double_click_text(text: TimestampedText):
         """Double-lick on the provided on-screen text."""
