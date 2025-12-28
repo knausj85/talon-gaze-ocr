@@ -55,14 +55,24 @@ settings():
 # Debugging commands.
 ocr show [text]: user.show_ocr_overlay("text")
 ocr show [text] near <user.timestamped_prose>: user.show_ocr_overlay("text", timestamped_prose)
+ocr show [text] last: user.show_ocr_overlay("text", types.none(), false)
 ocr show boxes: user.show_ocr_overlay("boxes")
+ocr show boxes near <user.timestamped_prose>: user.show_ocr_overlay("boxes", timestamped_prose)
+ocr show boxes last: user.show_ocr_overlay("boxes", types.none(), false)
+ocr hide: user.hide_ocr_overlay()
 
 # Commands that operate on text nearby where you're looking.
 # Example: "hover seen apple" to hover the cursor over the word "apple".
 (hover (seen | scene) | cursor move) <user.timestamped_prose>$: user.move_cursor_to_word(timestamped_prose)
 [left] (prod|proud|broad) <user.timestamped_prose>$:
     user.click_text(timestamped_prose)
-^duke <user.timestamped_prose>$:
+# Variant which chooses best match if multiple targets are found.
+lucky [left] (touch | click) <user.timestamped_prose>$:
+    user.click_text_without_disambiguation(timestamped_prose)
+# The following command is mostly for testing/debugging the onscreen_text capture.
+screen [left] (touch | click) <user.onscreen_text>$:
+    user.click_text(onscreen_text)
+[left] double (touch | click) <user.timestamped_prose>$:
     user.double_click_text(timestamped_prose)
 ^ripple <user.timestamped_prose>$:
     user.triple_click_text(timestamped_prose)
