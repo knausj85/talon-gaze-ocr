@@ -5,7 +5,7 @@ from collections import deque
 from dataclasses import dataclass
 from typing import Optional
 
-from talon import actions, app, tracking_system, ui
+from talon import actions, tracking_system, ui
 from talon.track import tobii
 from talon.types import Point2d
 
@@ -151,9 +151,8 @@ class TalonEyeTracker:
         frame = self._queue[frame_index]
         if abs(frame.ts - timestamp) > self.STALE_GAZE_THRESHOLD_SECONDS:
             print(
-                "No gaze history available at that time: {}. Range: [{}, {}]".format(
-                    timestamp, self._queue[0].ts, self._queue[-1].ts
-                )
+                f"No gaze history available at that time: {timestamp}. "
+                f"Range: [{self._queue[0].ts}, {self._queue[-1].ts}]"
             )
             return None
         return self._gaze_to_pixels(frame.gaze)

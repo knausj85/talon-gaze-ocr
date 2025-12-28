@@ -15,6 +15,14 @@ installed as a sibling in the same directory.
 Beta, switch to the "beta" branch (add flag `-b beta`) to take advantage of
 beta-only features. 
 
+If you use [Talon HUD](https://github.com/chaosparrot/talon_hud), consider
+setting `user.talon_hud_allows_capture = false` to make the HUD invisible to OCR
+(only supported on Talon Beta).
+
+Restart Talon to ensure that the package is fully reloaded. Unlike most Talon
+scripts, this package requires Talon to be restarted when it is updated or
+settings are changed.
+
 Required permissions:
 
 - On Mac, Talon requires the ability to read the screen. As per the
@@ -80,7 +88,6 @@ The .subtrees directory contains dependency packages needed by talon-gaze-ocr:
 - gaze-ocr was cloned from https://github.com/wolfmanstout/gaze-ocr
 - screen-ocr was cloned from https://github.com/wolfmanstout/screen-ocr
 - rapidfuzz was cloned from https://github.com/maxbachmann/RapidFuzz
-- jarowinkler was cloned from https://github.com/maxbachmann/JaroWinkler
 
 Changes in this repository are automatically pushed out to `gaze-ocr` and
 `screen-ocr` via a GitHub Action that uses `git subtree`.

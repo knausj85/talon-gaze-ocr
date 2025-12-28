@@ -1,7 +1,8 @@
-import screen_ocr
 from rapidfuzz import fuzz
 from skimage import filters, morphology
 from sklearn.base import BaseEstimator
+
+import screen_ocr
 
 
 def cost(result, gt):
@@ -35,27 +36,29 @@ class OcrEstimator(BaseEstimator):
 
     def fit(self, X=None, y=None):
         if self.threshold_type == "otsu":
-            threshold_function = lambda data: filters.threshold_otsu(data)
+
+            def threshold_function(data):
+                return filters.threshold_otsu(data)
         elif self.threshold_type == "local_otsu":
-            threshold_function = lambda data: filters.rank.otsu(
-                data, morphology.square(self.block_size)
-            )
+
+            def threshold_function(data):
+                return filters.rank.otsu(data, morphology.square(self.block_size))
         elif self.threshold_type == "local":
-            threshold_function = lambda data: filters.threshold_local(
-                data, self.block_size
-            )
+
+            def threshold_function(data):
+                return filters.threshold_local(data, self.block_size)
         elif self.threshold_type == "niblack":
-            threshold_function = lambda data: filters.threshold_niblack(
-                data, self.block_size
-            )
+
+            def threshold_function(data):
+                return filters.threshold_niblack(data, self.block_size)
         elif self.threshold_type == "sauvola":
-            threshold_function = lambda data: filters.threshold_sauvola(
-                data, self.block_size
-            )
+
+            def threshold_function(data):
+                return filters.threshold_sauvola(data, self.block_size)
         elif self.threshold_type is None:
             threshold_function = None
         else:
-            raise ValueError("Unknown threshold type: {}".format(self.threshold_type))
+            raise ValueError(f"Unknown threshold type: {self.threshold_type}")
         self.ocr_reader_ = screen_ocr.Reader.create_reader(
             backend=self.backend,
             threshold_function=threshold_function,
@@ -71,7 +74,7 @@ class OcrEstimator(BaseEstimator):
 
     def score(self, X, y):
         error = 0
-        for image, gt_text in zip(X, y):
+        for image, gt_text in zip(X, y, strict=True):
             result = self.ocr_reader_.read_image(image).as_string()
             error += cost(result, gt_text)
         return -error
