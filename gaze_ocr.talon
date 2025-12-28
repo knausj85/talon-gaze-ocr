@@ -95,7 +95,7 @@ middle (prod|proud) <user.timestamped_prose>$:
 # "copy seen apple through banana" to copy the phrase "apple pear banana".
 # "copy all seen apple" to copy all text from the field containing the word "apple".
 {user.ocr_actions} <user.prose_range>$:
-    user.perform_ocr_action(ocr_actions, ocr_modifiers or "", prose_range)
+    user.perform_ocr_action(ocr_actions, "", prose_range)
 # Example: "replace apple with banana" to replace the word "apple" with the word "banana".
 replace [{user.ocr_modifiers}] [seen | scene] <user.prose_range> with <user.prose>$:
     user.replace_text(ocr_modifiers or "", prose_range, prose)
