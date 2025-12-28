@@ -66,19 +66,12 @@ ocr hide: user.hide_ocr_overlay()
 (hover (seen | scene) | cursor move) <user.timestamped_prose>$: user.move_cursor_to_word(timestamped_prose)
 [left] (prod|proud|broad) <user.timestamped_prose>$:
     user.click_text(timestamped_prose)
-# Variant which chooses best match if multiple targets are found.
-lucky [left] (touch | click) <user.timestamped_prose>$:
-    user.click_text_without_disambiguation(timestamped_prose)
-# The following command is mostly for testing/debugging the onscreen_text capture.
-screen [left] (touch | click) <user.onscreen_text>$:
-    user.click_text(onscreen_text)
-[left] double (touch | click) <user.timestamped_prose>$:
+^duke <user.timestamped_prose>$:
     user.double_click_text(timestamped_prose)
 ^ripple <user.timestamped_prose>$:
     user.triple_click_text(timestamped_prose)
 ^steel <user.timestamped_prose>$:
     user.triple_click_text(timestamped_prose)
-    sleep(100ms)
     edit.copy()
 ^connie <user.timestamped_prose>$:
     user.right_click_text(timestamped_prose)
@@ -98,13 +91,10 @@ middle (prod|proud) <user.timestamped_prose>$:
 # "select apple" to select the word "apple".
 # "select apple through banana" to select the phrase "apple pear banana".
 # "select through before apple" to select from the text cursor position to before the word "apple".
-{user.ocr_common_actions} [{user.ocr_modifiers}] <user.prose_range>$:
-    user.perform_ocr_action(ocr_common_actions, ocr_modifiers or "", prose_range)
-# Examples: 
 # "take seen apple" to select the word "apple".
 # "copy seen apple through banana" to copy the phrase "apple pear banana".
 # "copy all seen apple" to copy all text from the field containing the word "apple".
-{user.ocr_actions} [{user.ocr_modifiers}] (seen | scene) <user.prose_range>$:
+{user.ocr_actions} <user.prose_range>$:
     user.perform_ocr_action(ocr_actions, ocr_modifiers or "", prose_range)
 # Example: "replace apple with banana" to replace the word "apple" with the word "banana".
 replace [{user.ocr_modifiers}] [seen | scene] <user.prose_range> with <user.prose>$:
@@ -115,6 +105,7 @@ go after <user.timestamped_prose> say <user.prose>$:
     user.insert_adjacent_to_text(timestamped_prose, "after", prose)
 phones [word] (seen | scene) <user.timestamped_prose>$:
     user.change_text_homophone(timestamped_prose)
+
 # Beta-only commands that offer intuitive text editing. See
 # https://handsfreecoding.org/2024/03/15/making-writing-and-editing-with-your-voice-feel-natural/
 # for detailed documentation.

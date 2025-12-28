@@ -1,6 +1,6 @@
 list: user.ocr_actions
 -
-take: select
+grab: select
 copy: copy
 carve: cut
 paste to: paste
