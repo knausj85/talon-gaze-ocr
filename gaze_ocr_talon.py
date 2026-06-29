@@ -10,7 +10,7 @@ from typing import Literal, Optional
 import numpy as np
 from talon import Context, Module, actions, app, cron, fs, screen, settings, ui
 from talon.canvas import Canvas, MouseEvent
-from talon.skia.typeface import Fontstyle, Typeface
+from skia import Fontstyle, Typeface
 from talon.types import rect
 
 from .timestamped_captures import TextRange, TimestampedText
