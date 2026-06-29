@@ -6,6 +6,18 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
 
+[dependency-groups]
+dev = [
+    "basedpyright==1.39.6",
+    "click>=8.4.1",
+    "line-profiler>=5.0.0",
+    "matplotlib>=3.10.9",
+    "numpy>=2.4.6",
+    "pillow>=12.2.0",
+    "pytest>=9.0.3",
+    "pytest-benchmark>=4.0.0",
+]
+
 [tool.ruff]
 extend-exclude = [".subtrees/rapidfuzz"]
 
@@ -26,7 +38,11 @@ select = [
 ]
 ignore = ["E501", "SIM105", "SIM116", "UP045"]
 
+[tool.pytest.ini_options]
+testpaths = [".tests"]
+
 [tool.pyright]
+typeCheckingMode = "standard"
 pythonVersion = "3.11"
 # Talon action class methods don't use self so ignore the associated errors and warnings
 reportGeneralTypeIssues = false
@@ -35,4 +51,4 @@ reportSelfClsParameterName = false
 reportMissingImports = false
 extraPaths = [".subtrees/gaze-ocr", ".subtrees/screen-ocr", ".subtrees/rapidfuzz/src"]
 # Override auto-exclude for owned subtrees, but keep rapidfuzz excluded
-exclude = [".subtrees/rapidfuzz"]
+exclude = [".subtrees/rapidfuzz", ".uv-cache", ".venv", "**/__pycache__"]
