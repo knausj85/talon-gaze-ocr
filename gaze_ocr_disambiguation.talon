@@ -1,4 +1,6 @@
-mode: user.gaze_ocr_disambiguation
+mode: command
+mode: user.dictation_command
+tag: user.gaze_ocr_disambiguation
 -
 <number_small>: user.choose_gaze_ocr_option(number_small)
 numbers hide: user.hide_gaze_ocr_options()

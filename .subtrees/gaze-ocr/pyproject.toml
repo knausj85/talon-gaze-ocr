@@ -1,6 +1,6 @@
 [project]
 name = "gaze-ocr"
-version = "0.4.0"
+version = "0.5.0"
 description = "Library for applying OCR to where the user is looking."
 readme = "README.md"
 authors = [{ name = "James Stout" }]
@@ -23,21 +23,10 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.uv.sources]
-screen-ocr = { path = "../screen_ocr", editable = true }
+screen-ocr = { path = "../screen-ocr", editable = true }
 
 [tool.ruff.lint]
-select = [
-    # pycodestyle
-    "E",
-    # Pyflakes
-    "F",
-    # pyupgrade
-    "UP",
-    # flake8-bugbear
-    "B",
-    # flake8-simplify
-    "SIM",
-    # isort
-    "I",
-]
-ignore = ["E501", "SIM105", "SIM116", "UP007"]
+ignore = ["BLE001", "S110"]
+
+[dependency-groups]
+dev = ["pytest>=8.4.1"]

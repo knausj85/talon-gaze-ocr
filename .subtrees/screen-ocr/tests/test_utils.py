@@ -9,6 +9,12 @@ def cost(result, gt):
     return -fuzz.partial_ratio(result.lower(), gt.lower())
 
 
+# NOTE: This estimator is currently broken: fit() always forwards
+# label_components to Reader.create_reader, which no longer accepts it, so it
+# raises TypeError. Several defaults also no longer work when left unset (e.g.
+# resize_factor=None breaks Reader._preprocess, and convert_grayscale=None
+# trips an assertion for the tesseract backend). Fix these before using the
+# grid_search mode of screen_ocr_tool.py.
 class OcrEstimator(BaseEstimator):
     def __init__(
         self,
@@ -42,21 +48,25 @@ class OcrEstimator(BaseEstimator):
         elif self.threshold_type == "local_otsu":
 
             def threshold_function(data):
+                assert self.block_size is not None
                 return filters.rank.otsu(data, morphology.square(self.block_size))
         elif self.threshold_type == "local":
 
             def threshold_function(data):
+                assert self.block_size is not None
                 return filters.threshold_local(data, self.block_size)
         elif self.threshold_type == "niblack":
 
             def threshold_function(data):
+                assert self.block_size is not None
                 return filters.threshold_niblack(data, self.block_size)
         elif self.threshold_type == "sauvola":
 
             def threshold_function(data):
+                assert self.block_size is not None
                 return filters.threshold_sauvola(data, self.block_size)
         elif self.threshold_type is None:
-            threshold_function = None
+            threshold_function = None  # type: ignore[assignment]
         else:
             raise ValueError(f"Unknown threshold type: {self.threshold_type}")
         self.ocr_reader_ = screen_ocr.Reader.create_reader(

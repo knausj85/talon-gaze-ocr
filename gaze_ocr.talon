@@ -29,16 +29,16 @@ settings():
 
 (eye | i) scroll up:
     user.move_cursor_to_gaze_point(0, 40)
-    user.mouse_scroll_up()
+    user.enhanced_scroll_up()
 (eye | i) scroll up half:
     user.move_cursor_to_gaze_point(0, 40)
-    user.mouse_scroll_up(0.5)
+    user.enhanced_scroll_up(0.5)
 (eye | i) scroll down:
     user.move_cursor_to_gaze_point(0, -40)
-    user.mouse_scroll_down()
+    user.enhanced_scroll_down()
 (eye | i) scroll down half:
     user.move_cursor_to_gaze_point(0, -40)
-    user.mouse_scroll_down(0.5)
+    user.enhanced_scroll_down(0.5)
 (eye | i) scroll left:
     user.move_cursor_to_gaze_point(40, 0)
     user.mouse_scroll_left()
@@ -55,7 +55,11 @@ settings():
 # Debugging commands.
 ocr show [text]: user.show_ocr_overlay("text")
 ocr show [text] near <user.timestamped_prose>: user.show_ocr_overlay("text", timestamped_prose)
+ocr show [text] last: user.show_last_ocr_overlay("text")
 ocr show boxes: user.show_ocr_overlay("boxes")
+ocr show boxes near <user.timestamped_prose>: user.show_ocr_overlay("boxes", timestamped_prose)
+ocr show boxes last: user.show_last_ocr_overlay("boxes")
+ocr hide: user.hide_ocr_overlay()
 
 # Commands that operate on text nearby where you're looking.
 # Example: "hover seen apple" to hover the cursor over the word "apple".
@@ -83,8 +87,12 @@ middle (prod|proud) <user.timestamped_prose>$:
      user.modifier_click_text(modifiers, timestamped_prose)
 (go before | pre (seen | scene)) <user.timestamped_prose>$: user.move_text_cursor_to_word(timestamped_prose, "before")
 (go after | post (seen | scene)) <user.timestamped_prose>$: user.move_text_cursor_to_word(timestamped_prose, "after")
-grab <user.prose_range>$:
-    user.perform_ocr_action("select", "", prose_range)
+# Examples: 
+# "select apple" to select the word "apple".
+# "select apple through banana" to select the phrase "apple pear banana".
+# "select through before apple" to select from the text cursor position to before the word "apple".
+{user.ocr_common_actions} [{user.ocr_modifiers}] <user.prose_range>$:
+    user.perform_ocr_action(ocr_common_actions, ocr_modifiers or "", prose_range)
 # Examples: 
 # "take seen apple" to select the word "apple".
 # "copy seen apple through banana" to copy the phrase "apple pear banana".

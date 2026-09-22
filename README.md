@@ -42,6 +42,21 @@ Note: This installation process is for Windows and Mac. Linux is not officially
 supported because Talon does not provide an OCR API. You may be able to get this
 working using Tesseract, but this configuration is not tested by the author.
 
+### Migrating from `beta-pi`
+
+If you use the `beta-pi` branch, switch to `beta`: `beta-pi` has been merged
+and retired. Update to the latest Talon Beta, then run these commands in
+your `talon-gaze-ocr` directory and restart Talon:
+
+```sh
+git fetch origin
+git switch beta
+git pull --ff-only
+```
+
+For single-branch clones, run `git remote set-branches origin beta` before fetching.
+If you need older Talon Beta support temporarily, check out the [`beta-before-pi` tag](https://github.com/wolfmanstout/talon-gaze-ocr/tree/beta-before-pi).
+
 ## Features:
 
 - Click, select, or position caret adjacent to any text visible onscreen.
@@ -60,6 +75,46 @@ working using Tesseract, but this configuration is not tested by the author.
 - Beta-only: [intuitive editing
   commands](https://handsfreecoding.org/2024/03/15/making-writing-and-editing-with-your-voice-feel-natural/)
   including "revise" and "insert".
+
+## Scrolling Visualization
+
+Scroll commands (`eye scroll up`, `eye scroll down`, `eye scroll up half`,
+`eye scroll down half`) provide two key improvements:
+- **Consistent scroll distance**: Scrolls a fixed fraction of the viewport regardless
+  of window height.
+- **Visual indicator**: Shows how content shifted so you don't lose your place.
+
+See [my blog post on voice-native
+scrolling](https://handsfreecoding.org/2026/02/15/voice-native-scrolling-in-talon-gaze-ocr/)
+for details on this feature.
+
+To enable unprefixed scroll commands (e.g. `scroll up`, `scroll down half`),
+add this tag to your Talon settings:
+```talon
+tag(): user.gaze_ocr_unprefixed_scroll
+```
+
+### Enable faster scrolling on Windows and Linux
+
+On Windows and Linux (not Mac), browsers use smooth scrolling by default, which
+slows down scroll detection. To speed this up, disable smooth scrolling and add
+a tag to your Talon settings:
+
+**Chromium (Chrome, Edge, Brave, Vivaldi, Opera):**
+1. Navigate to `chrome://flags/#smooth-scrolling`
+2. Set "Smooth Scrolling" to **Disabled**
+3. Restart your browser
+
+**Firefox:**
+1. Navigate to `about:preferences`
+2. Search for "smooth scrolling"
+3. Uncheck "Use smooth scrolling"
+
+Then add to your Talon settings (e.g., settings.talon in
+[community](https://github.com/talonhub/community)):
+```talon
+tag(): user.browser_smooth_scrolling_disabled
+```
 
 ## Known limitations:
 

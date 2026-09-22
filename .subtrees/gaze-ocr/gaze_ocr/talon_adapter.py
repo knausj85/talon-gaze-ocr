@@ -3,11 +3,12 @@ import logging
 import time
 from collections import deque
 from dataclasses import dataclass
-from typing import Optional
 
 from talon import actions, tracking_system, ui
 from talon.track import tobii
 from talon.types import Point2d
+
+logger = logging.getLogger(__name__)
 
 
 class Mouse:
@@ -17,28 +18,11 @@ class Mouse:
     def click(self):
         actions.mouse_click()
 
-    def click_down(self):
-        actions.mouse_drag()
-
-    def click_up(self):
-        actions.mouse_release()
-
-    def scroll_down(self, n=1):
-        for _ in range(n):
-            actions.user.mouse_scroll_down()
-
-    def scroll_up(self, n=1):
-        for _ in range(n):
-            actions.user.mouse_scroll_up()
-
 
 class Keyboard:
     def __init__(self):
         # shift:down won't affect future keystrokes on Mac, so we track it ourselves.
         self._shift = False
-
-    def type(self, text):
-        actions.insert(text)
 
     def shift_down(self):
         actions.key("shift:down")
@@ -67,7 +51,11 @@ class Keyboard:
 
 
 class AppActions:
-    def peek_left(self) -> Optional[str]:
+    def focus_at(self, x: int, y: int):
+        """Focus the window at the given coordinates."""
+        actions.user.focus_at(x, y)
+
+    def peek_left(self) -> str | None:
         try:
             return actions.user.dictation_peek(True, False)[0][0]
         except KeyError:
@@ -75,10 +63,10 @@ class AppActions:
                 return actions.user.dictation_peek_left()
             # If action is unavailable (e.g. no knausj).
             except KeyError:
-                logging.warning("Action user.dictation_peek is unavailable.")
+                logger.warning("Action user.dictation_peek is unavailable.")
                 return None
 
-    def peek_right(self) -> Optional[str]:
+    def peek_right(self) -> str | None:
         try:
             return actions.user.dictation_peek(False, True)[1][1]
         except KeyError:
@@ -86,7 +74,7 @@ class AppActions:
                 return actions.user.dictation_peek_right()
             # If action is unavailable (e.g. no knausj).
             except KeyError:
-                logging.warning("Action user.dictation_peek is unavailable.")
+                logger.warning("Action user.dictation_peek is unavailable.")
                 return None
 
 
@@ -138,25 +126,6 @@ class TalonEyeTracker:
             return None
         return self._gaze_to_pixels(self._queue[-1].gaze)
 
-    def get_gaze_point_or_default(self):
-        return self.get_gaze_point() or tuple(ui.active_window().rect.center)
-
-    def get_gaze_point_at_timestamp(self, timestamp):
-        if not self._queue:
-            print("No gaze history available")
-            return None
-        frame_index = bisect.bisect_left(self._queue, timestamp, key=lambda f: f.ts)
-        if frame_index == len(self._queue):
-            frame_index -= 1
-        frame = self._queue[frame_index]
-        if abs(frame.ts - timestamp) > self.STALE_GAZE_THRESHOLD_SECONDS:
-            print(
-                f"No gaze history available at that time: {timestamp}. "
-                f"Range: [{self._queue[0].ts}, {self._queue[-1].ts}]"
-            )
-            return None
-        return self._gaze_to_pixels(frame.gaze)
-
     def get_gaze_bounds_during_time_range(self, start_timestamp, end_timestamp):
         if not self._queue:
             print("No gaze history available")
@@ -199,9 +168,3 @@ class TalonEyeTracker:
         pos = rect.pos + gaze * rect.size
         pos = rect.clamp(pos)
         return (pos.x, pos.y)
-
-    def move_to_gaze_point(self, offset=(0, 0)):
-        gaze = self.get_gaze_point_or_default()
-        x = gaze[0] + offset[0]
-        y = gaze[1] + offset[1]
-        actions.mouse_move(x, y)
