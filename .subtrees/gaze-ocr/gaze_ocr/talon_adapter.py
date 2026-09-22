@@ -57,7 +57,7 @@ class AppActions:
 
     def peek_left(self) -> str | None:
         try:
-            return actions.user.dictation_peek(True, False)[0][0]
+            return actions.user.dictation_peek(True, False)[0]
         except KeyError:
             try:
                 return actions.user.dictation_peek_left()
@@ -68,7 +68,7 @@ class AppActions:
 
     def peek_right(self) -> str | None:
         try:
-            return actions.user.dictation_peek(False, True)[1][1]
+            return actions.user.dictation_peek(False, True)[1]
         except KeyError:
             try:
                 return actions.user.dictation_peek_right()
