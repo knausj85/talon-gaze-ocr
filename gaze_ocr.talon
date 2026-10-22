@@ -4,58 +4,62 @@ not tag: user.homerow_search
 and not tag: user.fluent_search_screen_search
 and not tag: user.clickable_overlay_active
 -
-settings():
-	user.ocr_connect_tracker = 0
-    
-(eye | i) (hover | [cursor] move): user.move_cursor_to_gaze_point()
-(eye | i) [left] (prod|proud):
-    user.move_cursor_to_gaze_point()
+# Commands that operate wherever you are looking.
+# Example: "eye hover" to hover the cursor over where you're looking.
+<user.eye_gaze_point> (hover | [cursor] move): user.move_cursor_to_gaze_point(eye_gaze_point)
+<user.eye_gaze_point> [left] (touch | click):
+    user.move_cursor_to_gaze_point(eye_gaze_point)
     mouse_click(0)
-(eye | i) [left] double (prod|proud):
-    user.move_cursor_to_gaze_point()
+<user.eye_gaze_point> [left] double (touch | click):
+    user.move_cursor_to_gaze_point(eye_gaze_point)
     mouse_click(0)
     mouse_click(0)
-(eye | i) right (prod|proud):
-    user.move_cursor_to_gaze_point()
+<user.eye_gaze_point> right (touch | click):
+    user.move_cursor_to_gaze_point(eye_gaze_point)
     mouse_click(1)
-(eye | i) middle (prod|proud):
-    user.move_cursor_to_gaze_point()
+<user.eye_gaze_point> middle (touch | click):
+    user.move_cursor_to_gaze_point(eye_gaze_point)
     mouse_click(2)
-(eye | i) <user.modifiers> (prod|proud):
-    user.move_cursor_to_gaze_point()
+# Example: "eye control click" to control-click where you're looking.
+<user.eye_gaze_point> <user.modifiers> (touch | click):
+    user.move_cursor_to_gaze_point(eye_gaze_point)
     key("{modifiers}:down")
     mouse_click(0)
     key("{modifiers}:up")
 
-(eye | i) scroll up:
-    user.move_cursor_to_gaze_point(0, 40)
-    user.mouse_scroll_up()
-(eye | i) scroll up half:
-    user.move_cursor_to_gaze_point(0, 40)
-    user.mouse_scroll_up(0.5)
-(eye | i) scroll down:
-    user.move_cursor_to_gaze_point(0, -40)
-    user.mouse_scroll_down()
-(eye | i) scroll down half:
-    user.move_cursor_to_gaze_point(0, -40)
-    user.mouse_scroll_down(0.5)
-(eye | i) scroll left:
-    user.move_cursor_to_gaze_point(40, 0)
+<user.eye_gaze_point> scroll up:
+    user.move_cursor_to_gaze_point(eye_gaze_point, 0, 40)
+    user.enhanced_scroll_up()
+<user.eye_gaze_point> scroll up half:
+    user.move_cursor_to_gaze_point(eye_gaze_point, 0, 40)
+    user.enhanced_scroll_up(0.5)
+<user.eye_gaze_point> scroll down:
+    user.move_cursor_to_gaze_point(eye_gaze_point, 0, -40)
+    user.enhanced_scroll_down()
+<user.eye_gaze_point> scroll down half:
+    user.move_cursor_to_gaze_point(eye_gaze_point, 0, -40)
+    user.enhanced_scroll_down(0.5)
+<user.eye_gaze_point> scroll left:
+    user.move_cursor_to_gaze_point(eye_gaze_point, 40, 0)
     user.mouse_scroll_left()
-(eye | i) scroll left half:
-    user.move_cursor_to_gaze_point(40, 0)
+<user.eye_gaze_point> scroll left half:
+    user.move_cursor_to_gaze_point(eye_gaze_point, 40, 0)
     user.mouse_scroll_left(0.5)
-(eye | i) scroll right:
-    user.move_cursor_to_gaze_point(-40, 0)
+<user.eye_gaze_point> scroll right:
+    user.move_cursor_to_gaze_point(eye_gaze_point, -40, 0)
     user.mouse_scroll_right()
-(eye | i) scroll right half:
-    user.move_cursor_to_gaze_point(-40, 0)
+<user.eye_gaze_point> scroll right half:
+    user.move_cursor_to_gaze_point(eye_gaze_point, -40, 0)
     user.mouse_scroll_right(0.5)
 
 # Debugging commands.
 ocr show [text]: user.show_ocr_overlay("text")
 ocr show [text] near <user.timestamped_prose>: user.show_ocr_overlay("text", timestamped_prose)
+ocr show [text] last: user.show_last_ocr_overlay("text")
 ocr show boxes: user.show_ocr_overlay("boxes")
+ocr show boxes near <user.timestamped_prose>: user.show_ocr_overlay("boxes", timestamped_prose)
+ocr show boxes last: user.show_last_ocr_overlay("boxes")
+ocr hide: user.hide_ocr_overlay()
 
 # Commands that operate on text nearby where you're looking.
 # Example: "hover seen apple" to hover the cursor over the word "apple".

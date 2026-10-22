@@ -72,11 +72,11 @@ if args.verbose:
         print(f"{name}:")
         display(image)
 
+    ocr_reader = screen_ocr.Reader.create_reader(
+        "winrt", debug_image_callback=debug_image_callback
+    )
 else:
-    debug_image_callback = None
-ocr_reader = screen_ocr.Reader.create_reader(
-    "winrt", debug_image_callback=debug_image_callback
-)
+    ocr_reader = screen_ocr.Reader.create_reader("winrt")
 
 
 # Run OCR.
@@ -130,12 +130,12 @@ elif args.mode == "grid_search":
             # "margin": [0, 50],
             "resize_factor": [2, 3],
             "resize_method": [
-                Image.NEAREST,
-                Image.BOX,
-                Image.BILINEAR,
-                Image.HAMMING,
-                Image.BICUBIC,
-                Image.LANCZOS,
+                Image.Resampling.NEAREST,
+                Image.Resampling.BOX,
+                Image.Resampling.BILINEAR,
+                Image.Resampling.HAMMING,
+                Image.Resampling.BICUBIC,
+                Image.Resampling.LANCZOS,
             ],
             # "convert_grayscale": [True],
             "shift_channels": [False, True],

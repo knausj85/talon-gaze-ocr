@@ -1,5 +1,10 @@
 # gaze-ocr
 
+[![PyPI](https://img.shields.io/pypi/v/gaze-ocr.svg)](https://pypi.org/project/gaze-ocr/)
+[![Changelog](https://img.shields.io/github/v/release/wolfmanstout/gaze-ocr?include_prereleases&label=changelog)](https://github.com/wolfmanstout/gaze-ocr/releases)
+[![Tests](https://github.com/wolfmanstout/gaze-ocr/actions/workflows/test.yml/badge.svg)](https://github.com/wolfmanstout/gaze-ocr/actions/workflows/test.yml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/wolfmanstout/gaze-ocr/blob/master/LICENSE)
+
 The `gaze-ocr` package makes easy to apply OCR to wherever the user is looking.
 This library is designed for voice control. The following instructions are for
 use with Dragonfly. For Talon, see
@@ -33,49 +38,62 @@ import gaze_ocr.dragonfly
 import gaze_ocr.eye_tracking
 import screen_ocr
 
-from dragonfly import (
-    Dictation,
-    Grammar,
-    Key,
-    MappingRule,
-    Mouse,
-    Text
-)
+from dragonfly import Dictation, Grammar, Key, MappingRule, Mouse, Text
 
 # See installation instructions:
 # https://github.com/wolfmanstout/gaze-ocr
 DLL_DIRECTORY = "c:/Users/james/Downloads/tobii.interaction.0.7.3/"
 
 # Initialize eye tracking and OCR.
-tracker = gaze_ocr.eye_tracking.EyeTracker.get_connected_instance(DLL_DIRECTORY,
-                                                                  mouse=gaze_ocr.dragonfly.Mouse(),
-                                                                  keyboard=gaze_ocr.dragonfly.Keyboard(),
-                                                                  windows=gaze_ocr.dragonfly.Windows())
+tracker = gaze_ocr.eye_tracking.EyeTracker.get_connected_instance(
+    DLL_DIRECTORY,
+    mouse=gaze_ocr.dragonfly.Mouse(),
+    keyboard=gaze_ocr.dragonfly.Keyboard(),
+    windows=gaze_ocr.dragonfly.Windows(),
+)
 ocr_reader = screen_ocr.Reader.create_fast_reader()
-gaze_ocr_controller = gaze_ocr.Controller(ocr_reader,
-                                          tracker,
-                                          mouse=gaze_ocr.dragonfly.Mouse(),
-                                          keyboard=gaze_ocr.dragonfly.Keyboard())
+gaze_ocr_controller = gaze_ocr.Controller(
+    ocr_reader,
+    tracker,
+    mouse=gaze_ocr.dragonfly.Mouse(),
+    keyboard=gaze_ocr.dragonfly.Keyboard(),
+)
 
 
 class CommandRule(MappingRule):
     mapping = {
         # Click on text.
-        "<text> click": gaze_ocr.dragonfly.MoveCursorToWordAction(gaze_ocr_controller, "%(text)s") + Mouse("left"),
-
+        "<text> click": gaze_ocr.dragonfly.MoveCursorToWordAction(
+            gaze_ocr_controller, "%(text)s"
+        )
+        + Mouse("left"),
         # Move the cursor for text editing.
-        "go before <text>": gaze_ocr.dragonfly.MoveTextCursorAction(gaze_ocr_controller, "%(text)s", "before"),
-        "go after <text>": gaze_ocr.dragonfly.MoveTextCursorAction(gaze_ocr_controller, "%(text)s", "after"),
-
+        "go before <text>": gaze_ocr.dragonfly.MoveTextCursorAction(
+            gaze_ocr_controller, "%(text)s", "before"
+        ),
+        "go after <text>": gaze_ocr.dragonfly.MoveTextCursorAction(
+            gaze_ocr_controller, "%(text)s", "after"
+        ),
         # Select text starting from the current position.
-        "words before <text>": Key("shift:down") + gaze_ocr.dragonfly.MoveTextCursorAction(gaze_ocr_controller, "%(text)s", "before") + Key("shift:up"),
-        "words after <text>": Key("shift:down") + gaze_ocr.dragonfly.MoveTextCursorAction(gaze_ocr_controller, "%(text)s", "after") + Key("shift:up"),
-
+        "words before <text>": Key("shift:down")
+        + gaze_ocr.dragonfly.MoveTextCursorAction(
+            gaze_ocr_controller, "%(text)s", "before"
+        )
+        + Key("shift:up"),
+        "words after <text>": Key("shift:down")
+        + gaze_ocr.dragonfly.MoveTextCursorAction(
+            gaze_ocr_controller, "%(text)s", "after"
+        )
+        + Key("shift:up"),
         # Select a phrase or range of text.
-        "words <text> [through <text2>]": gaze_ocr.dragonfly.SelectTextAction(gaze_ocr_controller, "%(text)s", "%(text2)s"),
-
+        "words <text> [through <text2>]": gaze_ocr.dragonfly.SelectTextAction(
+            gaze_ocr_controller, "%(text)s", "%(text2)s"
+        ),
         # Select and replace text.
-        "replace <text> with <replacement>": gaze_ocr.dragonfly.SelectTextAction(gaze_ocr_controller, "%(text)s") + Text("%(replacement)s"),
+        "replace <text> with <replacement>": gaze_ocr.dragonfly.SelectTextAction(
+            gaze_ocr_controller, "%(text)s"
+        )
+        + Text("%(replacement)s"),
     }
 
     extras = [
@@ -97,6 +115,7 @@ grammar.load()
 # Unload function which will be called by natlink at unload time.
 def unload():
     global grammar
-    if grammar: grammar.unload()
+    if grammar:
+        grammar.unload()
     grammar = None
 ```
